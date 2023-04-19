@@ -4,12 +4,13 @@ from classes import Circulo
 
 def inicializa():
     pygame.init()
-    largura_janela = 1000
+    largura_janela = 900
     altura_janela = 600
     window = pygame.display.set_mode((largura_janela, altura_janela))
     pygame.display.set_caption('Pattern Pursuit')
 
-    raio = 60
+    circulos = []
+    
 
     return window
 
