@@ -1,4 +1,5 @@
 import pygame
+import random
 
 cores = [
     (0, 0, 255),
@@ -22,6 +23,7 @@ class Jogo:
     def desenha(self, window):
         self.window.fill((0, 0, 0))
         self.circulos.desenha()
+        self.circulos.sorteia_cores()
 
         pygame.display.update()
     
@@ -50,7 +52,25 @@ class Circulo:
         
         for i in range(len(self.lista_cores)):
             self.circulos.append((window, self.lista_cores[i], (self.posicoes[i]), self.raio))
+        
+        self.cores_sorteadas = []
     
     def desenha(self):
         for i in range(len(self.lista_cores)):
             pygame.draw.circle(self.window, self.lista_cores[i], self.posicoes[i], self.raio)
+    
+    def sorteia_cores(self):
+
+        for cor in range(1):
+            cor_sorteada = random.choice(self.lista_cores)
+            self.cores_sorteadas.append(cor_sorteada)
+        
+        for circulos in self.circulos:
+            if circulos[1] == cor_sorteada:
+                pygame.draw.circle(self.window, cor_sorteada, circulos[2], self.raio)
+                pygame.display.update()
+                pygame.time.wait(1000)
+                pygame.draw.circle(self.window, (0, 0, 0), circulos[2], self.raio)
+                pygame.display.update()
+                pygame.time.wait(1000)
+
