@@ -23,7 +23,8 @@ class Jogo:
     def desenha(self, window):
         self.window.fill((0, 0, 0))
         self.circulos.desenha()
-        self.circulos.sorteia_cores()
+        if self.circulos.verifica_clique():
+            self.circulos.sorteia_cores()
 
         pygame.display.update()
     
@@ -54,23 +55,40 @@ class Circulo:
             self.circulos.append((window, self.lista_cores[i], (self.posicoes[i]), self.raio))
         
         self.cores_sorteadas = []
+        self.jogadas_player = []
     
     def desenha(self):
         for i in range(len(self.lista_cores)):
             pygame.draw.circle(self.window, self.lista_cores[i], self.posicoes[i], self.raio)
     
-    def sorteia_cores(self):
+    def verifica_clique(self):
+        self.x, self.y = pygame.mouse.get_pos()
+        self.distancia_ponto_centro = ((self.x - self.posicoes[0][0])**2 + (self.y - self.posicoes[0][1])**2)**(1/2)
+        
+        if self.distancia_ponto_centro <= self.raio:
+            for circulos in self.circulos:
+                if self.x == circulos[2][0] and self.y == circulos[2][1] and pygame.MOUSEBUTTONDOWN:
+                    self.jogadas_player.append(circulos[1])
+        
+        if self.jogadas_player == self.cores_sorteadas:
+            return True
 
-        for cor in range(1):
+    def sorteia_cores(self):
+            
             cor_sorteada = random.choice(self.lista_cores)
             self.cores_sorteadas.append(cor_sorteada)
         
-        for circulos in self.circulos:
-            if circulos[1] == cor_sorteada:
-                pygame.draw.circle(self.window, cor_sorteada, circulos[2], self.raio)
-                pygame.display.update()
-                pygame.time.wait(1000)
-                pygame.draw.circle(self.window, (0, 0, 0), circulos[2], self.raio)
-                pygame.display.update()
-                pygame.time.wait(1000)
+            for circulos in self.circulos:
+                if circulos[1] == cor_sorteada:
+                    pygame.draw.circle(self.window, cor_sorteada, circulos[2], self.raio)
+                    pygame.display.update()
+                    pygame.time.wait(1000)
+                    pygame.draw.circle(self.window, (0, 0, 0), circulos[2], self.raio)
+                    pygame.display.update()
+                    pygame.time.wait(1000)
+
+
+
+
+            
 
