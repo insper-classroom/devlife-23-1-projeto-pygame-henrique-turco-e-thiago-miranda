@@ -1,11 +1,18 @@
 import pygame
 import random
+from constantes import *
 
 cores = [
-    (0, 0, 255),
-    (255, 255, 0),
-    (0, 255, 0),
-    (255, 0, 0)
+    AZUL,
+    AMARELO,
+    VERDE,
+    VERMELHO
+]
+cores_escuras = [
+    AZUL_ESCURO,
+    AMARELO_ESCURO,
+    VERDE_ESCURO,
+    VERMELHO_ESCURO
 ]
 
 class Jogo:
@@ -93,11 +100,15 @@ class Circulo:
         (560, 450)
         ]
         self.lista_cores = cores
+        self.lista_cores_escuras = cores_escuras
         self.raio = 60
         self.circulos = []
+        self.circulos_escuros = []
         
         for i in range(len(self.lista_cores)):
             self.circulos.append((window, self.lista_cores[i], (self.posicoes[i]), self.raio))
+        for i in range(len(self.lista_cores_escuras)):
+            self.circulos_escuros.append((window, self.lista_cores_escuras[i], (self.posicoes[i]), self.raio))
         
         self.cores_sorteadas = []
         self.rect_sorteados = []
@@ -116,13 +127,11 @@ class Circulo:
         for i in range(len(self.lista_cores)):
             r = pygame.Rect(self.posicoes[i][0] - self.raio, self.posicoes[i][1] - self.raio, self.raio*2, self.raio*2)
             self.retangulo.append(r) 
-    
+            pygame.draw.circle(self.window, self.lista_cores[i], self.posicoes[i], self.raio)
+            
             if self.mostra_circulo or self.indice_circulo >= len(self.cores_sorteadas) or self.lista_cores[i] != self.cores_sorteadas[self.indice_circulo]:
-                pygame.draw.circle(self.window, self.lista_cores[i], self.posicoes[i], self.raio)
+                pygame.draw.circle(self.window, self.lista_cores_escuras[i], self.posicoes[i], self.raio)
             
-    
-            
-    
     def atualiza(self):
         
         self.tempo_passado = pygame.time.get_ticks() - self.tempo_start
@@ -133,36 +142,3 @@ class Circulo:
             self.tempo_start = pygame.time.get_ticks()
             if self.mostra_circulo:
                 self.indice_circulo+=1
-        
-                
-            
-        
-        
-        
-        # # for cor in self.cores_sorteadas:   
-        #    for circulos in self.circulos:     
-        #         if circulos[1] == cor:
-                
-        #             pygame.draw.circle(self.window, (0, 0, 0), circulos[2], self.raio)
-        #             pygame.display.update()
-                    
-                    
-        #             pygame.draw.circle(self.window, cor, circulos[2], self.raio)
-        #             pygame.display.update()
-                    
-                    
-                       
-
-                
-                            
-        
-       
-                            
-        
-                        
-
-
-
-
-            
-
