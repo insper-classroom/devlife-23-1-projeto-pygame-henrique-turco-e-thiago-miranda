@@ -1,7 +1,8 @@
 # JOGO
 LARGURA = 800
 ALTURA = 600
-RAIO = 90
+LARGURA_RECT = 180
+ALTURA_RECT = 180
 TÍTULO = "Pattern Pursuit"
 GAME_OVER = "Game Over"
 MODO_CLASSICO = "Modo Clássico"

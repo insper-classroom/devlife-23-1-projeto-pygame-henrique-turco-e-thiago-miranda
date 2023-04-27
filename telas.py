@@ -38,9 +38,9 @@ class TelaInicial(Jogo):
                 if mouse_rect.colliderect(self.rect_modo_classico):
                     return TelaClassico()
                 elif mouse_rect.colliderect(self.rect_modo_rapido):
-                    pass
+                    pass # retorna TelaRapido()
                 elif mouse_rect.colliderect(self.rect_modo_escuro):
-                    pass
+                    pass # retorna TelaEscuro()
                 elif mouse_rect.colliderect(self.rect_sair):
                     pygame.quit()
                     quit()
@@ -53,59 +53,72 @@ class TelaClassico(Jogo):
         self.cores_claras = [AZUL, AMARELO, VERDE, VERMELHO]
         self.cores = [AZUL_ESCURO, AMARELO_ESCURO, VERDE_ESCURO, VERMELHO_ESCURO]
 
-        self.circulos = [
-            Circulos(300, 270, AZUL_ESCURO),
-            Circulos(500, 270, AMARELO_ESCURO),
-            Circulos(300, 470, VERDE_ESCURO),
-            Circulos(500, 470, VERMELHO_ESCURO)
+        self.quadrados = [
+            [210, 180, LARGURA_RECT, ALTURA_RECT, AZUL_ESCURO],
+            [410, 180, LARGURA_RECT, ALTURA_RECT, AMARELO_ESCURO],
+            [210, 380, LARGURA_RECT, ALTURA_RECT, VERDE_ESCURO],
+            [410, 380, LARGURA_RECT, ALTURA_RECT, VERMELHO_ESCURO]
         ]
 
-        self.circulos_claros = [
-            CirculosClaros(300, 270, AZUL),
-            CirculosClaros(500, 270, AMARELO),
-            CirculosClaros(300, 470, VERDE),
-            CirculosClaros(500, 470, VERMELHO) 
+        self.quadrados_claros = [
+            QuadradoClaro(210, 180, LARGURA_RECT, ALTURA_RECT, AZUL),
+            QuadradoClaro(410, 180, LARGURA_RECT, ALTURA_RECT, AMARELO),
+            QuadradoClaro(210, 380, LARGURA_RECT, ALTURA_RECT, VERDE),
+            QuadradoClaro(410, 380, LARGURA_RECT, ALTURA_RECT, VERMELHO) 
         ]
 
         self.sorteia = True
-        self.mostra_circulo = True
+        self.mostra_quadrado = True
         self.cores_sorteadas = []
+        self.rect_sorteados = []
+        self.retangulos = []
         self.tempo_start = pygame.time.get_ticks()
+        self.indice_quadrado = 0
 
-    def sorteia_circulos(self): # ACHO QUE ESSA FUNÇÃO TÁ CERTA!!!
+    def sorteia_quadrados(self):
         if self.sorteia:
-            cor_sorteada = random.choice(self.cores)
-            self.cores_sorteadas.append(cor_sorteada) # Sorteia e coloca a cor na lista das sorteadas
+            quadrado_sorteado = random.choice(self.quadrados) 
+            self.cores_sorteadas.append(quadrado_sorteado[4]) # self.quadrados[4] = cor
+            self.rect_sorteados.append([quadrado_sorteado[0], quadrado_sorteado[1], quadrado_sorteado[2], quadrado_sorteado[3]]) # self.quadrados[0:4]
             print(self.cores_sorteadas)
+            print(self.rect_sorteados)
 
     def desenha(self):
         self.window.blit(self.fundo_modo_classico, (0, 0))
-        for circulo_claro in self.circulos_claros: # Desenha os circulos claros
-            circulo_claro.desenha(self.window)
-        for circulo in self.circulos: # Desenha os circulos escuros depois
-            circulo.desenha(self.window)
+        for quadrado_claro in self.quadrados_claros: # Desenha os quadrados claros
+            quadrado_claro.desenha(self.window)
 
-        # AQUI SERLF.SORTEIA VIRA FALSE E O CIRCULO ESCURO SOME DA LISTA DOS SORTEADOS 
+        for i in range(4): # Cria os retângulos para verificação do clique
+            r = pygame.Rect(self.quadrados[i][0], self.quadrados[i][1], self.quadrados[i][2], self.quadrados[i][3])
+            self.retangulos.append(r) 
+    
+            if self.mostra_quadrado or self.indice_quadrado >= len(self.cores_sorteadas) or self.cores[i] != self.cores_sorteadas[self.indice_quadrado]:
+                pygame.draw.rect(self.window, self.cores[i], (self.quadrados[i][0], self.quadrados[i][1], self.quadrados[i][2], self.quadrados[i][3]))
 
     def update(self):
+        self.tempo()
+        if self.sorteia:
+            self.sorteia_quadrados()
+            self.sorteia = False
+
         for evento in pygame.event.get():
             if evento.type == pygame.QUIT:
                 pygame.quit()
                 quit()
-            if evento.type == pygame.MOUSEBUTTONDOWN:
-                mouse_x, mouse_y = pygame.mouse.get_pos()
-                for circulo in self.circulos:
-                    if circulo.clicou(mouse_x, mouse_y) == True:
-                        self.botao_clicado = circulo.cor
+            # if evento.type == pygame.MOUSEBUTTONDOWN:
+            #     mouse_x, mouse_y = pygame.mouse.get_pos()
+            #     for circulo in self.circulos:
+            #         if circulo.clicou(mouse_x, mouse_y) == True:
+            #             self.botao_clicado = circulo.cor
         return self 
     
     def tempo(self):  
         self.tempo_passado = pygame.time.get_ticks() - self.tempo_start
         if self.tempo_passado > 1000:
-            self.mostra_circulo = not self.mostra_circulo
+            self.mostra_quadrado = not self.mostra_quadrado
             self.tempo_start = pygame.time.get_ticks()
-            if self.mostra_circulo:
-                self.indice_circulo+=1
+            if self.mostra_quadrado:
+                self.indice_quadrado += 1
 
 class TelaGameOver(Jogo):
     def __init__(self):
