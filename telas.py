@@ -70,6 +70,7 @@ class TelaClassico(Jogo):
         self.sorteia = True
         self.mostra_quadrado = True
         self.cores_sorteadas = []
+        self.sequencia_jogador = []
         self.rect_sorteados = []
         self.retangulos = []
         self.tempo_start = pygame.time.get_ticks()
@@ -81,7 +82,6 @@ class TelaClassico(Jogo):
             self.cores_sorteadas.append(quadrado_sorteado[4]) # self.quadrados[4] = cor
             self.rect_sorteados.append([quadrado_sorteado[0], quadrado_sorteado[1], quadrado_sorteado[2], quadrado_sorteado[3]]) # self.quadrados[0:4]
             print(self.cores_sorteadas)
-            print(self.rect_sorteados)
 
     def desenha(self):
         self.window.blit(self.fundo_modo_classico, (0, 0))
@@ -105,11 +105,26 @@ class TelaClassico(Jogo):
             if evento.type == pygame.QUIT:
                 pygame.quit()
                 quit()
-            # if evento.type == pygame.MOUSEBUTTONDOWN:
-            #     mouse_x, mouse_y = pygame.mouse.get_pos()
-            #     for circulo in self.circulos:
-            #         if circulo.clicou(mouse_x, mouse_y) == True:
-            #             self.botao_clicado = circulo.cor
+            if evento.type == pygame.MOUSEBUTTONDOWN and evento.button == 1:
+                x, y = pygame.mouse.get_pos()
+                mouse_rect = pygame.Rect(x, y, 1, 1)
+                if mouse_rect.colliderect(self.retangulos[0]):
+                    self.sequencia_jogador.append(self.cores[0])
+                if mouse_rect.colliderect(self.retangulos[1]):
+                    self.sequencia_jogador.append(self.cores[1])
+                if mouse_rect.colliderect(self.retangulos[2]):
+                    self.sequencia_jogador.append(self.cores[2])
+                if mouse_rect.colliderect(self.retangulos[3]):
+                    self.sequencia_jogador.append(self.cores[3])
+                print(self.sequencia_jogador)
+                if self.sequencia_jogador == self.cores_sorteadas:
+                    self.sorteia = True
+                    self.indice_quadrado = 0
+                else:
+                    return TelaGameOver()
+            if len(self.sequencia_jogador) == len(self.cores_sorteadas):
+                self.sequencia_jogador = []
+            
         return self 
     
     def tempo(self):  
@@ -138,7 +153,7 @@ class TelaGameOver(Jogo):
             if evento.type == pygame.QUIT:
                 pygame.quit()
                 quit()
-            if evento.type == pygame.MOUSEBUTTONUP:
+            if evento.type == pygame.MOUSEBUTTONDOWN and evento.button == 1:
                 x, y = pygame.mouse.get_pos()
                 mouse_rect = pygame.Rect(x, y, 1, 1)
                 if mouse_rect.colliderect(self.rect_tentar_de_novo):
