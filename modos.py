@@ -32,11 +32,13 @@ class Classico:
         self.sorteia = True
         self.mostra_circulo = True
         self.cores_sorteadas = []
+        self.tempo_start = pygame.time.get_ticks()
 
-    def sorteia_circulos(self):
+    def sorteia_circulos(self): # ACHO QUE ESSA FUNÇÃO TÁ CERTA!!!
         if self.sorteia:
             cor_sorteada = random.choice(self.cores)
             self.cores_sorteadas.append(cor_sorteada) # Sorteia e coloca a cor na lista das sorteadas
+            print(self.cores_sorteadas)
 
     def roda(self):
         self.jogando = True
@@ -61,7 +63,21 @@ class Classico:
             if evento.type == pygame.QUIT:
                 pygame.quit()
                 quit(0)
-
+            if evento.type == pygame.MOUSEBUTTONDOWN:
+                mouse_x, mouse_y = pygame.mouse.get_pos()
+                for circulo in self.circulos:
+                    if circulo.clicou(mouse_x, mouse_y) == True:
+                        self.botao_clicado = circulo.cor
+    
+    def tempo(self):  
+        self.tempo_passado = pygame.time.get_ticks() - self.tempo_start
+        if self.tempo_passado > 1000:
+            self.mostra_circulo = not self.mostra_circulo
+            self.tempo_start = pygame.time.get_ticks()
+            if self.mostra_circulo:
+                self.indice_circulo+=1
+    
 jogo = Classico()
 while True:
+    jogo.sorteia_circulos()
     jogo.roda()
