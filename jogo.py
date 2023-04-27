@@ -1,3 +1,4 @@
+#loop e atualizacao da tela ensinado por leonardo freitas
 from telas import *
 
 tela_atual = TelaInicial()

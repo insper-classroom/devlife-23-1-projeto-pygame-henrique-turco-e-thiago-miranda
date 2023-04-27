@@ -76,8 +76,3 @@ class Classico:
             self.tempo_start = pygame.time.get_ticks()
             if self.mostra_circulo:
                 self.indice_circulo+=1
-    
-jogo = Classico()
-while True:
-    jogo.sorteia_circulos()
-    jogo.roda()
