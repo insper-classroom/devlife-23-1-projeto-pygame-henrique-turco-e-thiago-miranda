@@ -22,7 +22,7 @@ nav{
 }
 
 nav img{
-    width: 150px;
+    width: 220px;
 }
 
 .nav-links{
@@ -48,7 +48,7 @@ nav img{
     content: '';
     width: 0%;
     height: 2px;
-    background: blue;
+    background: rgb(255, 41, 21);
     display: block;
     margin: auto;
     transition: 0.5s;
@@ -90,9 +90,9 @@ nav img{
 }
 
 .hero-btn:hover{
-    border: 1px solid blue;
-    background: blue;
-    transition: 1s;
+    border: 1px solid rgb(255, 41, 21);
+    background: rgb(225, 41, 21);
+    transition: 0.7s;
 }
 
 nav.fa{
@@ -111,9 +111,14 @@ h1{
     font-weight: 600;
 }
 
+h3{
+    font-size: 35px;
+    font-weight: 600;
+}
+
 p{
-    color: #353535;
-    font-size: 17px;
+    color: #1f1f1f;
+    font-size: 22px;
     font-weight: 400;
     line-height: 22px;
     margin-top: 12px;
@@ -157,6 +162,7 @@ p{
     margin: auto;
     text-align: center;
     padding-top: 50px;
+    padding-bottom: 50px;
 }
 
 /*-----Equipe-----*/
@@ -165,6 +171,7 @@ p{
     width: 100%;
     text-align: center;
     padding: 30px 0;
+    
 }
 
 .equipe h4{
