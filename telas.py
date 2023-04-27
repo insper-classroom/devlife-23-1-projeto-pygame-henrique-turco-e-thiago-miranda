@@ -75,6 +75,8 @@ class TelaClassico(Jogo):
         self.retangulos = []
         self.tempo_start = pygame.time.get_ticks()
         self.indice_quadrado = 0
+        self.verificação_individual = 0
+        self.validacao_jogada = False
 
     def sorteia_quadrados(self):
         if self.sorteia:
@@ -108,20 +110,31 @@ class TelaClassico(Jogo):
             if evento.type == pygame.MOUSEBUTTONDOWN and evento.button == 1:
                 x, y = pygame.mouse.get_pos()
                 mouse_rect = pygame.Rect(x, y, 1, 1)
+                
                 if mouse_rect.colliderect(self.retangulos[0]):
                     self.sequencia_jogador.append(self.cores[0])
-                if mouse_rect.colliderect(self.retangulos[1]):
+                    self.verificação_individual += 1
+                elif mouse_rect.colliderect(self.retangulos[1]):
                     self.sequencia_jogador.append(self.cores[1])
-                if mouse_rect.colliderect(self.retangulos[2]):
+                    self.verificação_individual += 1
+                elif mouse_rect.colliderect(self.retangulos[2]):
                     self.sequencia_jogador.append(self.cores[2])
-                if mouse_rect.colliderect(self.retangulos[3]):
+                    self.verificação_individual += 1
+                elif mouse_rect.colliderect(self.retangulos[3]):
                     self.sequencia_jogador.append(self.cores[3])
+                    self.verificação_individual += 1
                 print(self.sequencia_jogador)
+                
+                for i in range(len(self.sequencia_jogador)):
+                    if self.sequencia_jogador[i] == self.cores_sorteadas[i]:
+                        self.validacao_jogada = True
+                    else:
+                        return TelaGameOver()
+                    
                 if self.sequencia_jogador == self.cores_sorteadas:
                     self.sorteia = True
                     self.indice_quadrado = 0
-                else:
-                    return TelaGameOver()
+
             if len(self.sequencia_jogador) == len(self.cores_sorteadas):
                 self.sequencia_jogador = []
             
