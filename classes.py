@@ -113,7 +113,7 @@ class Circulo:
     
     def desenha(self):
         
-        for i in range(len(self.lista_cores)):
+        for i in range(len(self.lista_cores)): # CRIAR OS RETANGULOS PARA VERIFICAR O CLIQUE DO MOUSE
             r = pygame.Rect(self.posicoes[i][0] - self.raio, self.posicoes[i][1] - self.raio, self.raio*2, self.raio*2)
             self.retangulo.append(r) 
     
@@ -121,7 +121,7 @@ class Circulo:
                 pygame.draw.circle(self.window, self.lista_cores[i], self.posicoes[i], self.raio)
             
     
-            
+        # MOSTRA CÍRCULO SERVE PARA VERIFICAR QUEM DEVE PISCAR NA TELA DE ACORDO COM A LISTA DOS SORTEADOS
     
     def atualiza(self):
         
