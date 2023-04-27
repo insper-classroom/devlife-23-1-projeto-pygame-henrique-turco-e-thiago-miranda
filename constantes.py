@@ -3,6 +3,7 @@ LARGURA = 800
 ALTURA = 600
 RAIO = 90
 TÍTULO = "Pattern Pursuit"
+GAME_OVER = "Game Over"
 MODO_CLASSICO = "Modo Clássico"
 MODO_RÁPIDO = "Modo Rápido"
 MODO_ESCURO = "Modo Escuro"
