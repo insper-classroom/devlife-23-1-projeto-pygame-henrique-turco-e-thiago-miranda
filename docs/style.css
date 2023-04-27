@@ -177,6 +177,12 @@ p{
     margin-top: 20px;
     cursor: pointer;
 }
+#download button:hover{
+    background: rgb(255, 41, 21);
+    color: #fff;
+    transition: 0.7s;
+}
+
 
 
 /*-----Equipe-----*/
