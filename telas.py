@@ -8,11 +8,13 @@ class Jogo:
         pygame.init()
         pygame.display.set_caption(TÍTULO)
         self.window = pygame.display.set_mode((LARGURA, ALTURA))
-        self.fundo = pygame.image.load('img/Inicio-Pattern-Pursuit.png')
-        self.fundo_modo_classico = pygame.image.load('img/Modo-Classico.png')
-        self.fundo_modo_rapido = pygame.image.load('img/Modo-Rápido.png')
-        self.fundo_modo_escuro = pygame.image.load('img/Modo-Escuro.png')
+        self.fundo = pygame.image.load('assets/img/Inicio-Pattern-Pursuit.png')
+        self.fundo_modo_classico = pygame.image.load('assets/img/Modo-Classico.png')
+        self.fundo_modo_rapido = pygame.image.load('assets/img/Modo-Rápido.png')
+        self.fundo_modo_escuro = pygame.image.load('assets/img/Modo-Escuro.png')
         self.tela_antiga = None
+        pygame.mixer_music.load('assets/snd/390655__mvrasseli__atari-game-masters-loop.wav')
+        pygame.mixer_music.play(loops=-1)
 
     def roda(self):
         self.desenha()
@@ -373,7 +375,7 @@ class TelaGameOver(Jogo):
     def __init__(self):
         super().__init__()
         pygame.display.set_caption(GAME_OVER)
-        self.game_over = pygame.image.load('img/Game-Over-Pattern-Pursuit.png')
+        self.game_over = pygame.image.load('assets/img/Game-Over-Pattern-Pursuit.png')
         self.rect_tentar_de_novo = pygame.Rect(235, 282, 330, 90)
         self.rect_voltar_inicio = pygame.Rect(235, 382, 330, 90)
         self.rect_sair = pygame.Rect(235, 482, 330, 90)
