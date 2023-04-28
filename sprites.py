@@ -11,11 +11,8 @@ class Quadrado:
         self.altura_rect = altura_rect
         self.cor = cor
 
-    def desenha(self, window): # Desenha os círculos 
+    def desenha(self, window):
         pygame.draw.rect(window, self.cor, (self.x, self.y, self.largura_rect, self.altura_rect))
-
-    # def clicou(self, mouse_x, mouse_y): # Retorna True ou False se o mouse clicou no círculo
-    #     return ((mouse_x - self.x) ** 2 + (mouse_y - self.y) **2 ) ** 0.5 <= RAIO
     
 
 class QuadradoClaro:
@@ -26,5 +23,17 @@ class QuadradoClaro:
         self.altura_rect = altura_rect
         self.cor = cor
 
-    def desenha(self, window): 
+    def desenha(self, window): # Desenha os quadrados claros
         pygame.draw.rect(window, self.cor, (self.x, self.y, self.largura_rect, self.altura_rect))
+
+
+# fonte: tutorial YouTube canal Tech & Gaming
+class Pontuacao:
+    def __init__(self, x, y, texto):
+        self.x, self.y = x, y
+        self.texto = texto
+
+    def desenha(self, window):
+        fonte = pygame.font.SysFont("Consolas", 16)
+        texto = fonte.render(self.texto, True, BRANCO)
+        window.blit(texto, (self.x, self.y))

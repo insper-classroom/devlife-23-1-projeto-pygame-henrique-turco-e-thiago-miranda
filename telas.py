@@ -80,16 +80,32 @@ class TelaClassico(Jogo):
         self.indice_quadrado = 0
         self.verificação_individual = 0
         self.validacao_jogada = False
+        self.score = 0
+        self.highscore = self.get_high_score()
+
+    def get_high_score(self):
+        with open("high_score_classico.txt", "r") as file:
+            score = file.read()
+        return int(score)
+
+    def save_score(self):
+        with open("high_score_classico.txt", "w") as file:
+            if self.score > self.highscore:
+                file.write(str(self.score))
+            else:
+                file.write(str(self.highscore))
 
     def sorteia_quadrados(self):
         if self.sorteia:
             quadrado_sorteado = random.choice(self.quadrados) 
             self.cores_sorteadas.append(quadrado_sorteado[4]) # self.quadrados[4] = cor
             self.rect_sorteados.append([quadrado_sorteado[0], quadrado_sorteado[1], quadrado_sorteado[2], quadrado_sorteado[3]]) # self.quadrados[0:4]
-            print(self.cores_sorteadas)
 
     def desenha(self):
         self.window.blit(self.fundo_modo_classico, (0, 0))
+        Pontuacao(270, 150, f"Score: {str(self.score)}").desenha(self.window)
+        Pontuacao(440, 150, f"High Score: {str(self.highscore)}").desenha(self.window)
+
         for quadrado_claro in self.quadrados_claros: # Desenha os quadrados claros
             quadrado_claro.desenha(self.window)
 
@@ -126,16 +142,17 @@ class TelaClassico(Jogo):
                 elif mouse_rect.colliderect(self.retangulos[3]):
                     self.sequencia_jogador.append(self.cores[3])
                     self.verificação_individual += 1
-                print(self.sequencia_jogador)
                 
                 for i in range(len(self.sequencia_jogador)):
                     if self.sequencia_jogador[i] == self.cores_sorteadas[i]:
                         self.validacao_jogada = True
                     else:
+                        self.save_score()
                         return TelaGameOver()
                     
                 if self.sequencia_jogador == self.cores_sorteadas:
                     self.sorteia = True
+                    self.score += 1
                     self.indice_quadrado = 0
 
             if len(self.sequencia_jogador) == len(self.cores_sorteadas):
@@ -188,7 +205,6 @@ class TelaRapido(Jogo):
             quadrado_sorteado = random.choice(self.quadrados) 
             self.cores_sorteadas.append(quadrado_sorteado[4]) # self.quadrados[4] = cor
             self.rect_sorteados.append([quadrado_sorteado[0], quadrado_sorteado[1], quadrado_sorteado[2], quadrado_sorteado[3]]) # self.quadrados[0:4]
-            print(self.cores_sorteadas)
 
     def desenha(self):
         self.window.blit(self.fundo_modo_rapido, (0, 0))
@@ -228,7 +244,6 @@ class TelaRapido(Jogo):
                 elif mouse_rect.colliderect(self.retangulos[3]):
                     self.sequencia_jogador.append(self.cores[3])
                     self.verificação_individual += 1
-                print(self.sequencia_jogador)
                 
                 for i in range(len(self.sequencia_jogador)):
                     if self.sequencia_jogador[i] == self.cores_sorteadas[i]:
@@ -291,7 +306,6 @@ class TelaEscuro(Jogo):
             quadrado_sorteado = random.choice(self.quadrados) 
             self.cores_sorteadas.append(quadrado_sorteado[4]) # self.quadrados[4] = cor
             self.rect_sorteados.append([quadrado_sorteado[0], quadrado_sorteado[1], quadrado_sorteado[2], quadrado_sorteado[3]]) # self.quadrados[0:4]
-            print(self.cores_sorteadas)
 
     def desenha(self):
         self.window.blit(self.fundo_modo_escuro, (0, 0))
@@ -331,7 +345,6 @@ class TelaEscuro(Jogo):
                 elif mouse_rect.colliderect(self.retangulos[3]):
                     self.sequencia_jogador.append(self.cores[3])
                     self.verificação_individual += 1
-                print(self.sequencia_jogador)
                 
                 for i in range(len(self.sequencia_jogador)):
                     if self.sequencia_jogador[i] == self.cores_sorteadas[i]:
