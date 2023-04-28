@@ -8,13 +8,10 @@ class Jogo:
         pygame.init()
         pygame.display.set_caption(TÍTULO)
         self.window = pygame.display.set_mode((LARGURA, ALTURA))
-        self.fundo = pygame.image.load('assets/img/Inicio-Pattern-Pursuit.png')
-        self.fundo_modo_classico = pygame.image.load('assets/img/Modo-Classico.png')
-        self.fundo_modo_rapido = pygame.image.load('assets/img/Modo-Rápido.png')
-        self.fundo_modo_escuro = pygame.image.load('assets/img/Modo-Escuro.png')
-        self.tela_antiga = None
-        pygame.mixer_music.load('assets/snd/390655__mvrasseli__atari-game-masters-loop.wav')
-        pygame.mixer_music.play(loops=-1)
+        self.fundo = pygame.image.load('img/Inicio-Pattern-Pursuit.png')
+        self.fundo_modo_classico = pygame.image.load('img/Modo-Classico.png')
+        self.fundo_modo_rapido = pygame.image.load('img/Modo-Rápido.png')
+        self.fundo_modo_escuro = pygame.image.load('img/Modo-Escuro.png')
 
     def roda(self):
         self.desenha()
@@ -83,9 +80,9 @@ class TelaClassico(Jogo):
         self.verificação_individual = 0
         self.validacao_jogada = False
         self.score = 0
-        self.highscore = self.get_high_score()
+        self.highscore = self.get_high_score_classico()
 
-    def get_high_score(self):
+    def get_high_score_classico(self):
         with open("high_score_classico.txt", "r") as file:
             score = file.read()
         return int(score)
@@ -148,9 +145,9 @@ class TelaClassico(Jogo):
                 for i in range(len(self.sequencia_jogador)):
                     if self.sequencia_jogador[i] == self.cores_sorteadas[i]:
                         self.validacao_jogada = True
-                    else:
+                    else: # Caso o jogador erre a sequência
                         self.save_score()
-                        return TelaGameOver()
+                        return TelaGameOverClassico()
                     
                 if self.sequencia_jogador == self.cores_sorteadas:
                     self.sorteia = True
@@ -201,6 +198,20 @@ class TelaRapido(Jogo):
         self.indice_quadrado = 0
         self.verificação_individual = 0
         self.validacao_jogada = False
+        self.score = 0
+        self.highscore = self.get_high_score_rapido()
+
+    def get_high_score_rapido(self):
+        with open("high_score_rapido.txt", "r") as file:
+            score = file.read()
+        return int(score)
+
+    def save_score(self):
+        with open("high_score_rapido.txt", "w") as file:
+            if self.score > self.highscore:
+                file.write(str(self.score))
+            else:
+                file.write(str(self.highscore))
 
     def sorteia_quadrados(self):
         if self.sorteia:
@@ -210,6 +221,9 @@ class TelaRapido(Jogo):
 
     def desenha(self):
         self.window.blit(self.fundo_modo_rapido, (0, 0))
+        Pontuacao(270, 150, f"Score: {str(self.score)}").desenha(self.window)
+        Pontuacao(440, 150, f"High Score: {str(self.highscore)}").desenha(self.window)
+
         for quadrado_claro in self.quadrados_claros: # Desenha os quadrados claros
             quadrado_claro.desenha(self.window)
 
@@ -250,11 +264,13 @@ class TelaRapido(Jogo):
                 for i in range(len(self.sequencia_jogador)):
                     if self.sequencia_jogador[i] == self.cores_sorteadas[i]:
                         self.validacao_jogada = True
-                    else:
-                        return TelaGameOver()
+                    else: # Caso o jogador erre a sequência
+                        self.save_score()
+                        return TelaGameOverRapido()
                     
                 if self.sequencia_jogador == self.cores_sorteadas:
                     self.sorteia = True
+                    self.score += 1
                     self.indice_quadrado = 0
 
             if len(self.sequencia_jogador) == len(self.cores_sorteadas):
@@ -302,6 +318,20 @@ class TelaEscuro(Jogo):
         self.indice_quadrado = 0
         self.verificação_individual = 0
         self.validacao_jogada = False
+        self.score = 0
+        self.highscore = self.get_high_score_escuro()
+
+    def get_high_score_escuro(self):
+        with open("high_score_escuro.txt", "r") as file:
+            score = file.read()
+        return int(score)
+
+    def save_score(self):
+        with open("high_score_escuro.txt", "w") as file:
+            if self.score > self.highscore:
+                file.write(str(self.score))
+            else:
+                file.write(str(self.highscore))
 
     def sorteia_quadrados(self):
         if self.sorteia:
@@ -311,6 +341,9 @@ class TelaEscuro(Jogo):
 
     def desenha(self):
         self.window.blit(self.fundo_modo_escuro, (0, 0))
+        Pontuacao(270, 150, f"Score: {str(self.score)}").desenha(self.window)
+        Pontuacao(440, 150, f"High Score: {str(self.highscore)}").desenha(self.window)
+
         for quadrado_claro in self.quadrados_claros: # Desenha os quadrados claros
             quadrado_claro.desenha(self.window)
 
@@ -351,11 +384,13 @@ class TelaEscuro(Jogo):
                 for i in range(len(self.sequencia_jogador)):
                     if self.sequencia_jogador[i] == self.cores_sorteadas[i]:
                         self.validacao_jogada = True
-                    else:
-                        return TelaGameOver()
+                    else: # Caso o jogador erre a sequência
+                        self.save_score()
+                        return TelaGameOverEscuro()
                     
                 if self.sequencia_jogador == self.cores_sorteadas:
                     self.sorteia = True
+                    self.score += 1
                     self.indice_quadrado = 0
 
             if len(self.sequencia_jogador) == len(self.cores_sorteadas):
@@ -371,11 +406,11 @@ class TelaEscuro(Jogo):
             if self.mostra_quadrado:
                 self.indice_quadrado += 1
 
-class TelaGameOver(Jogo):
+class TelaGameOverClassico(Jogo):
     def __init__(self):
         super().__init__()
         pygame.display.set_caption(GAME_OVER)
-        self.game_over = pygame.image.load('assets/img/Game-Over-Pattern-Pursuit.png')
+        self.game_over = pygame.image.load('img/Game-Over-Pattern-Pursuit.png')
         self.rect_tentar_de_novo = pygame.Rect(235, 282, 330, 90)
         self.rect_voltar_inicio = pygame.Rect(235, 382, 330, 90)
         self.rect_sair = pygame.Rect(235, 482, 330, 90)
@@ -393,10 +428,70 @@ class TelaGameOver(Jogo):
                 x, y = pygame.mouse.get_pos()
                 mouse_rect = pygame.Rect(x, y, 1, 1)
                 if mouse_rect.colliderect(self.rect_tentar_de_novo):
-                    return TelaClassico() # GUARDAR EM UMA VARIAVEL A ULTIMA TELA USADA, PARA ASSIM RETORNÁ-LA AQUI
+                    return TelaClassico()                    
                 elif mouse_rect.colliderect(self.rect_voltar_inicio):
                     return TelaInicial()
                 elif mouse_rect.colliderect(self.rect_sair):
                     pygame.quit()
                     quit()
-        return self 
+        return self
+    
+class TelaGameOverRapido(Jogo):
+    def __init__(self):
+        super().__init__()
+        pygame.display.set_caption(GAME_OVER)
+        self.game_over = pygame.image.load('img/Game-Over-Pattern-Pursuit.png')
+        self.rect_tentar_de_novo = pygame.Rect(235, 282, 330, 90)
+        self.rect_voltar_inicio = pygame.Rect(235, 382, 330, 90)
+        self.rect_sair = pygame.Rect(235, 482, 330, 90)
+
+    def desenha(self):
+        self.window.blit(self.game_over, (0, 0))
+        pygame.display.update()
+
+    def update(self):
+        for evento in pygame.event.get():
+            if evento.type == pygame.QUIT:
+                pygame.quit()
+                quit()
+            if evento.type == pygame.MOUSEBUTTONDOWN and evento.button == 1:
+                x, y = pygame.mouse.get_pos()
+                mouse_rect = pygame.Rect(x, y, 1, 1)
+                if mouse_rect.colliderect(self.rect_tentar_de_novo):
+                    return TelaRapido()                    
+                elif mouse_rect.colliderect(self.rect_voltar_inicio):
+                    return TelaInicial()
+                elif mouse_rect.colliderect(self.rect_sair):
+                    pygame.quit()
+                    quit()
+        return self
+    
+class TelaGameOverEscuro(Jogo):
+    def __init__(self):
+        super().__init__()
+        pygame.display.set_caption(GAME_OVER)
+        self.game_over = pygame.image.load('img/Game-Over-Pattern-Pursuit.png')
+        self.rect_tentar_de_novo = pygame.Rect(235, 282, 330, 90)
+        self.rect_voltar_inicio = pygame.Rect(235, 382, 330, 90)
+        self.rect_sair = pygame.Rect(235, 482, 330, 90)
+
+    def desenha(self):
+        self.window.blit(self.game_over, (0, 0))
+        pygame.display.update()
+
+    def update(self):
+        for evento in pygame.event.get():
+            if evento.type == pygame.QUIT:
+                pygame.quit()
+                quit()
+            if evento.type == pygame.MOUSEBUTTONDOWN and evento.button == 1:
+                x, y = pygame.mouse.get_pos()
+                mouse_rect = pygame.Rect(x, y, 1, 1)
+                if mouse_rect.colliderect(self.rect_tentar_de_novo):
+                    return TelaEscuro()                    
+                elif mouse_rect.colliderect(self.rect_voltar_inicio):
+                    return TelaInicial()
+                elif mouse_rect.colliderect(self.rect_sair):
+                    pygame.quit()
+                    quit()
+        return self
