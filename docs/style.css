@@ -149,6 +149,7 @@ p{
     padding-bottom: 56.25%;
     padding-top: 35px;
     height: 0;
+    ;
   }
 
 /*-----Log-----*/
@@ -232,5 +233,27 @@ p{
     color: #fff;
     transition: 0.7s;
 }
+.rect_amarelo{
+    border: solid 5px rgba(255, 255, 0, 0.725);
+    background-color: rgba(255, 255, 0, 0.085);
+    padding: 10px;
+}
 
+.rect_azul{
+    border: solid 5px rgba(0, 149, 255, 0.725); 
+    background-color: rgba(0, 145, 255, 0.07); 
+    padding: 10px;
+}
+
+.rect_verde{
+    border: solid 5px rgba(0, 255, 0, 0.725); 
+    background-color: rgba(0, 255, 0, 0.07); 
+    padding: 10px;
+}
+
+.rect_preto{
+    border: solid 5px #0000009c; 
+    background-color: #2a2929; 
+    padding: 10px
+}
 
