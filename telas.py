@@ -81,9 +81,9 @@ class TelaClassico(Jogo):
         self.verificação_individual = 0
         self.validacao_jogada = False
         self.score = 0
-        self.highscore = self.get_high_score()
+        self.highscore = self.get_high_score_classico()
 
-    def get_high_score(self):
+    def get_high_score_classico(self):
         with open("high_score_classico.txt", "r") as file:
             score = file.read()
         return int(score)
@@ -146,7 +146,7 @@ class TelaClassico(Jogo):
                 for i in range(len(self.sequencia_jogador)):
                     if self.sequencia_jogador[i] == self.cores_sorteadas[i]:
                         self.validacao_jogada = True
-                    else:
+                    else: # Caso o jogador erre a sequência
                         self.save_score()
                         return TelaGameOver()
                     
@@ -199,6 +199,20 @@ class TelaRapido(Jogo):
         self.indice_quadrado = 0
         self.verificação_individual = 0
         self.validacao_jogada = False
+        self.score = 0
+        self.highscore = self.get_high_score_rapido()
+
+    def get_high_score_rapido(self):
+        with open("high_score_rapido.txt", "r") as file:
+            score = file.read()
+        return int(score)
+
+    def save_score(self):
+        with open("high_score_rapido.txt", "w") as file:
+            if self.score > self.highscore:
+                file.write(str(self.score))
+            else:
+                file.write(str(self.highscore))
 
     def sorteia_quadrados(self):
         if self.sorteia:
@@ -208,6 +222,9 @@ class TelaRapido(Jogo):
 
     def desenha(self):
         self.window.blit(self.fundo_modo_rapido, (0, 0))
+        Pontuacao(270, 150, f"Score: {str(self.score)}").desenha(self.window)
+        Pontuacao(440, 150, f"High Score: {str(self.highscore)}").desenha(self.window)
+
         for quadrado_claro in self.quadrados_claros: # Desenha os quadrados claros
             quadrado_claro.desenha(self.window)
 
@@ -248,11 +265,13 @@ class TelaRapido(Jogo):
                 for i in range(len(self.sequencia_jogador)):
                     if self.sequencia_jogador[i] == self.cores_sorteadas[i]:
                         self.validacao_jogada = True
-                    else:
+                    else: # Caso o jogador erre a sequência
+                        self.save_score()
                         return TelaGameOver()
                     
                 if self.sequencia_jogador == self.cores_sorteadas:
                     self.sorteia = True
+                    self.score += 1
                     self.indice_quadrado = 0
 
             if len(self.sequencia_jogador) == len(self.cores_sorteadas):
@@ -300,6 +319,20 @@ class TelaEscuro(Jogo):
         self.indice_quadrado = 0
         self.verificação_individual = 0
         self.validacao_jogada = False
+        self.score = 0
+        self.highscore = self.get_high_score_escuro()
+
+    def get_high_score_escuro(self):
+        with open("high_score_escuro.txt", "r") as file:
+            score = file.read()
+        return int(score)
+
+    def save_score(self):
+        with open("high_score_escuro.txt", "w") as file:
+            if self.score > self.highscore:
+                file.write(str(self.score))
+            else:
+                file.write(str(self.highscore))
 
     def sorteia_quadrados(self):
         if self.sorteia:
@@ -309,6 +342,9 @@ class TelaEscuro(Jogo):
 
     def desenha(self):
         self.window.blit(self.fundo_modo_escuro, (0, 0))
+        Pontuacao(270, 150, f"Score: {str(self.score)}").desenha(self.window)
+        Pontuacao(440, 150, f"High Score: {str(self.highscore)}").desenha(self.window)
+
         for quadrado_claro in self.quadrados_claros: # Desenha os quadrados claros
             quadrado_claro.desenha(self.window)
 
@@ -349,11 +385,13 @@ class TelaEscuro(Jogo):
                 for i in range(len(self.sequencia_jogador)):
                     if self.sequencia_jogador[i] == self.cores_sorteadas[i]:
                         self.validacao_jogada = True
-                    else:
+                    else: # Caso o jogador erre a sequência
+                        self.save_score()
                         return TelaGameOver()
                     
                 if self.sequencia_jogador == self.cores_sorteadas:
                     self.sorteia = True
+                    self.score += 1
                     self.indice_quadrado = 0
 
             if len(self.sequencia_jogador) == len(self.cores_sorteadas):
