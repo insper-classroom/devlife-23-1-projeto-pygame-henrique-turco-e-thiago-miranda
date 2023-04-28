@@ -8,10 +8,12 @@ class Jogo:
         pygame.init()
         pygame.display.set_caption(TÍTULO)
         self.window = pygame.display.set_mode((LARGURA, ALTURA))
-        self.fundo = pygame.image.load('img/Inicio-Pattern-Pursuit.png')
-        self.fundo_modo_classico = pygame.image.load('img/Modo-Classico.png')
-        self.fundo_modo_rapido = pygame.image.load('img/Modo-Rápido.png')
-        self.fundo_modo_escuro = pygame.image.load('img/Modo-Escuro.png')
+        self.fundo = pygame.image.load('assets/snd/img/Inicio-Pattern-Pursuit.png')
+        self.fundo_modo_classico = pygame.image.load('assets/snd/img/Modo-Classico.png')
+        self.fundo_modo_rapido = pygame.image.load('assets/snd/img/Modo-Rápido.png')
+        self.fundo_modo_escuro = pygame.image.load('assets/snd/img/Modo-Escuro.png')
+        pygame.mixer_music.load('assets/snd/390655__mvrasseli__atari-game-masters-loop.wav')
+        pygame.mixer_music.play(loops=-1)
 
     def roda(self):
         self.desenha()
@@ -81,6 +83,11 @@ class TelaClassico(Jogo):
         self.validacao_jogada = False
         self.score = 0
         self.highscore = self.get_high_score_classico()
+        self.som0 = pygame.mixer.Sound('assets/snd/00.wav')
+        self.som1 = pygame.mixer.Sound('assets/snd/01.wav')
+        self.som2 = pygame.mixer.Sound('assets/snd/02.wav')
+        self.som3 = pygame.mixer.Sound('assets/snd/03.wav')
+        pygame.mixer.music.set_volume(0.2)
 
     def get_high_score_classico(self):
         with open("high_score_classico.txt", "r") as file:
@@ -132,15 +139,19 @@ class TelaClassico(Jogo):
                 if mouse_rect.colliderect(self.retangulos[0]):
                     self.sequencia_jogador.append(self.cores[0])
                     self.verificação_individual += 1
+                    self.som0.play()
                 elif mouse_rect.colliderect(self.retangulos[1]):
                     self.sequencia_jogador.append(self.cores[1])
                     self.verificação_individual += 1
+                    self.som1.play()
                 elif mouse_rect.colliderect(self.retangulos[2]):
                     self.sequencia_jogador.append(self.cores[2])
                     self.verificação_individual += 1
+                    self.som2.play()
                 elif mouse_rect.colliderect(self.retangulos[3]):
                     self.sequencia_jogador.append(self.cores[3])
                     self.verificação_individual += 1
+                    self.som3.play()
                 
                 for i in range(len(self.sequencia_jogador)):
                     if self.sequencia_jogador[i] == self.cores_sorteadas[i]:
@@ -161,7 +172,7 @@ class TelaClassico(Jogo):
     
     def tempo(self):  
         self.tempo_passado = pygame.time.get_ticks() - self.tempo_start
-        if self.tempo_passado > 1000:
+        if self.tempo_passado > 650:
             self.mostra_quadrado = not self.mostra_quadrado
             self.tempo_start = pygame.time.get_ticks()
             if self.mostra_quadrado:
@@ -200,6 +211,11 @@ class TelaRapido(Jogo):
         self.validacao_jogada = False
         self.score = 0
         self.highscore = self.get_high_score_rapido()
+        self.som0 = pygame.mixer.Sound('assets/snd/00.wav')
+        self.som1 = pygame.mixer.Sound('assets/snd/01.wav')
+        self.som2 = pygame.mixer.Sound('assets/snd/02.wav')
+        self.som3 = pygame.mixer.Sound('assets/snd/03.wav')
+        pygame.mixer.music.set_volume(0.2)
 
     def get_high_score_rapido(self):
         with open("high_score_rapido.txt", "r") as file:
@@ -244,22 +260,26 @@ class TelaRapido(Jogo):
             if evento.type == pygame.QUIT:
                 pygame.quit()
                 quit()
-            if evento.type == pygame.MOUSEBUTTONDOWN and evento.button == 1:
+            if evento.type == pygame.MOUSEBUTTONUP and evento.button == 1:
                 x, y = pygame.mouse.get_pos()
                 mouse_rect = pygame.Rect(x, y, 1, 1)
                 
                 if mouse_rect.colliderect(self.retangulos[0]):
                     self.sequencia_jogador.append(self.cores[0])
                     self.verificação_individual += 1
+                    self.som0.play()
                 elif mouse_rect.colliderect(self.retangulos[1]):
                     self.sequencia_jogador.append(self.cores[1])
                     self.verificação_individual += 1
+                    self.som1.play()
                 elif mouse_rect.colliderect(self.retangulos[2]):
                     self.sequencia_jogador.append(self.cores[2])
                     self.verificação_individual += 1
+                    self.som2.play()
                 elif mouse_rect.colliderect(self.retangulos[3]):
                     self.sequencia_jogador.append(self.cores[3])
                     self.verificação_individual += 1
+                    self.som3.play()
                 
                 for i in range(len(self.sequencia_jogador)):
                     if self.sequencia_jogador[i] == self.cores_sorteadas[i]:
@@ -280,7 +300,7 @@ class TelaRapido(Jogo):
     
     def tempo(self):  
         self.tempo_passado = pygame.time.get_ticks() - self.tempo_start
-        if self.tempo_passado > 1000:
+        if self.tempo_passado > 320:
             self.mostra_quadrado = not self.mostra_quadrado
             self.tempo_start = pygame.time.get_ticks()
             if self.mostra_quadrado:
@@ -320,6 +340,11 @@ class TelaEscuro(Jogo):
         self.validacao_jogada = False
         self.score = 0
         self.highscore = self.get_high_score_escuro()
+        self.som0 = pygame.mixer.Sound('assets/snd/00.wav')
+        self.som1 = pygame.mixer.Sound('assets/snd/01.wav')
+        self.som2 = pygame.mixer.Sound('assets/snd/02.wav')
+        self.som3 = pygame.mixer.Sound('assets/snd/03.wav')
+        pygame.mixer.music.set_volume(0.2)
 
     def get_high_score_escuro(self):
         with open("high_score_escuro.txt", "r") as file:
@@ -371,15 +396,19 @@ class TelaEscuro(Jogo):
                 if mouse_rect.colliderect(self.retangulos[0]):
                     self.sequencia_jogador.append(self.cores[0])
                     self.verificação_individual += 1
+                    self.som0.play()
                 elif mouse_rect.colliderect(self.retangulos[1]):
                     self.sequencia_jogador.append(self.cores[1])
                     self.verificação_individual += 1
+                    self.som1.play()
                 elif mouse_rect.colliderect(self.retangulos[2]):
                     self.sequencia_jogador.append(self.cores[2])
                     self.verificação_individual += 1
+                    self.som2.play()
                 elif mouse_rect.colliderect(self.retangulos[3]):
                     self.sequencia_jogador.append(self.cores[3])
                     self.verificação_individual += 1
+                    self.som3.play()
                 
                 for i in range(len(self.sequencia_jogador)):
                     if self.sequencia_jogador[i] == self.cores_sorteadas[i]:
@@ -400,7 +429,7 @@ class TelaEscuro(Jogo):
     
     def tempo(self):  
         self.tempo_passado = pygame.time.get_ticks() - self.tempo_start
-        if self.tempo_passado > 1000:
+        if self.tempo_passado > 650:
             self.mostra_quadrado = not self.mostra_quadrado
             self.tempo_start = pygame.time.get_ticks()
             if self.mostra_quadrado:
@@ -410,7 +439,7 @@ class TelaGameOverClassico(Jogo):
     def __init__(self):
         super().__init__()
         pygame.display.set_caption(GAME_OVER)
-        self.game_over = pygame.image.load('img/Game-Over-Pattern-Pursuit.png')
+        self.game_over = pygame.image.load('assets/snd/img/Game-Over-Pattern-Pursuit.png')
         self.rect_tentar_de_novo = pygame.Rect(235, 282, 330, 90)
         self.rect_voltar_inicio = pygame.Rect(235, 382, 330, 90)
         self.rect_sair = pygame.Rect(235, 482, 330, 90)
@@ -440,7 +469,7 @@ class TelaGameOverRapido(Jogo):
     def __init__(self):
         super().__init__()
         pygame.display.set_caption(GAME_OVER)
-        self.game_over = pygame.image.load('img/Game-Over-Pattern-Pursuit.png')
+        self.game_over = pygame.image.load('assets/snd/img/Game-Over-Pattern-Pursuit.png')
         self.rect_tentar_de_novo = pygame.Rect(235, 282, 330, 90)
         self.rect_voltar_inicio = pygame.Rect(235, 382, 330, 90)
         self.rect_sair = pygame.Rect(235, 482, 330, 90)
@@ -470,7 +499,7 @@ class TelaGameOverEscuro(Jogo):
     def __init__(self):
         super().__init__()
         pygame.display.set_caption(GAME_OVER)
-        self.game_over = pygame.image.load('img/Game-Over-Pattern-Pursuit.png')
+        self.game_over = pygame.image.load('assets/snd/img/Game-Over-Pattern-Pursuit.png')
         self.rect_tentar_de_novo = pygame.Rect(235, 282, 330, 90)
         self.rect_voltar_inicio = pygame.Rect(235, 382, 330, 90)
         self.rect_sair = pygame.Rect(235, 482, 330, 90)
