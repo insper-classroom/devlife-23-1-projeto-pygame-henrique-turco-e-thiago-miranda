@@ -12,7 +12,6 @@ class Jogo:
         self.fundo_modo_classico = pygame.image.load('img/Modo-Classico.png')
         self.fundo_modo_rapido = pygame.image.load('img/Modo-Rápido.png')
         self.fundo_modo_escuro = pygame.image.load('img/Modo-Escuro.png')
-        self.tela_antiga = None
 
     def roda(self):
         self.desenha()
@@ -148,7 +147,7 @@ class TelaClassico(Jogo):
                         self.validacao_jogada = True
                     else: # Caso o jogador erre a sequência
                         self.save_score()
-                        return TelaGameOver()
+                        return TelaGameOverClassico()
                     
                 if self.sequencia_jogador == self.cores_sorteadas:
                     self.sorteia = True
@@ -267,7 +266,7 @@ class TelaRapido(Jogo):
                         self.validacao_jogada = True
                     else: # Caso o jogador erre a sequência
                         self.save_score()
-                        return TelaGameOver()
+                        return TelaGameOverRapido()
                     
                 if self.sequencia_jogador == self.cores_sorteadas:
                     self.sorteia = True
@@ -387,7 +386,7 @@ class TelaEscuro(Jogo):
                         self.validacao_jogada = True
                     else: # Caso o jogador erre a sequência
                         self.save_score()
-                        return TelaGameOver()
+                        return TelaGameOverEscuro()
                     
                 if self.sequencia_jogador == self.cores_sorteadas:
                     self.sorteia = True
@@ -407,7 +406,7 @@ class TelaEscuro(Jogo):
             if self.mostra_quadrado:
                 self.indice_quadrado += 1
 
-class TelaGameOver(Jogo):
+class TelaGameOverClassico(Jogo):
     def __init__(self):
         super().__init__()
         pygame.display.set_caption(GAME_OVER)
@@ -429,10 +428,70 @@ class TelaGameOver(Jogo):
                 x, y = pygame.mouse.get_pos()
                 mouse_rect = pygame.Rect(x, y, 1, 1)
                 if mouse_rect.colliderect(self.rect_tentar_de_novo):
-                    return TelaClassico() # GUARDAR EM UMA VARIAVEL A ULTIMA TELA USADA, PARA ASSIM RETORNÁ-LA AQUI
+                    return TelaClassico()                    
                 elif mouse_rect.colliderect(self.rect_voltar_inicio):
                     return TelaInicial()
                 elif mouse_rect.colliderect(self.rect_sair):
                     pygame.quit()
                     quit()
-        return self 
+        return self
+    
+class TelaGameOverRapido(Jogo):
+    def __init__(self):
+        super().__init__()
+        pygame.display.set_caption(GAME_OVER)
+        self.game_over = pygame.image.load('img/Game-Over-Pattern-Pursuit.png')
+        self.rect_tentar_de_novo = pygame.Rect(235, 282, 330, 90)
+        self.rect_voltar_inicio = pygame.Rect(235, 382, 330, 90)
+        self.rect_sair = pygame.Rect(235, 482, 330, 90)
+
+    def desenha(self):
+        self.window.blit(self.game_over, (0, 0))
+        pygame.display.update()
+
+    def update(self):
+        for evento in pygame.event.get():
+            if evento.type == pygame.QUIT:
+                pygame.quit()
+                quit()
+            if evento.type == pygame.MOUSEBUTTONDOWN and evento.button == 1:
+                x, y = pygame.mouse.get_pos()
+                mouse_rect = pygame.Rect(x, y, 1, 1)
+                if mouse_rect.colliderect(self.rect_tentar_de_novo):
+                    return TelaRapido()                    
+                elif mouse_rect.colliderect(self.rect_voltar_inicio):
+                    return TelaInicial()
+                elif mouse_rect.colliderect(self.rect_sair):
+                    pygame.quit()
+                    quit()
+        return self
+    
+class TelaGameOverEscuro(Jogo):
+    def __init__(self):
+        super().__init__()
+        pygame.display.set_caption(GAME_OVER)
+        self.game_over = pygame.image.load('img/Game-Over-Pattern-Pursuit.png')
+        self.rect_tentar_de_novo = pygame.Rect(235, 282, 330, 90)
+        self.rect_voltar_inicio = pygame.Rect(235, 382, 330, 90)
+        self.rect_sair = pygame.Rect(235, 482, 330, 90)
+
+    def desenha(self):
+        self.window.blit(self.game_over, (0, 0))
+        pygame.display.update()
+
+    def update(self):
+        for evento in pygame.event.get():
+            if evento.type == pygame.QUIT:
+                pygame.quit()
+                quit()
+            if evento.type == pygame.MOUSEBUTTONDOWN and evento.button == 1:
+                x, y = pygame.mouse.get_pos()
+                mouse_rect = pygame.Rect(x, y, 1, 1)
+                if mouse_rect.colliderect(self.rect_tentar_de_novo):
+                    return TelaEscuro()                    
+                elif mouse_rect.colliderect(self.rect_voltar_inicio):
+                    return TelaInicial()
+                elif mouse_rect.colliderect(self.rect_sair):
+                    pygame.quit()
+                    quit()
+        return self
