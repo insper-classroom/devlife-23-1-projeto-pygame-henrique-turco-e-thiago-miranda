@@ -87,6 +87,7 @@ nav img{
     font-size: 16px;
     background: transparent;
     cursor: pointer;
+    
 }
 
 .hero-btn:hover{
@@ -170,15 +171,15 @@ p{
     height: 50px;
     border-radius: 5px;
     border: none;
-    background: rgb(205, 200, 200);
-    color: #000000;
+    background: rgb(255, 41, 21);
+    color: #ffffff;
     font-size: 1.2rem;
     font-weight: 600;
     margin-top: 20px;
     cursor: pointer;
 }
 #download button:hover{
-    background: rgb(255, 41, 21);
+    background: rgb(225, 35, 18);
     color: #fff;
     transition: 0.7s;
 }
