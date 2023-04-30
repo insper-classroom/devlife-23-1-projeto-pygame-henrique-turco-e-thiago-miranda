@@ -2,6 +2,7 @@ import pygame
 import random
 from sprites import *
 from constantes import *
+import time
 
 class Jogo:
     def __init__(self):
@@ -119,10 +120,18 @@ class TelaClassico(Jogo):
         for i in range(4): # Cria os retângulos para verificação do clique
             r = pygame.Rect(self.quadrados[i][0], self.quadrados[i][1], self.quadrados[i][2], self.quadrados[i][3])
             self.retangulos.append(r) 
-    
             if self.mostra_quadrado or self.indice_quadrado >= len(self.cores_sorteadas) or self.cores[i] != self.cores_sorteadas[self.indice_quadrado]:
                 pygame.draw.rect(self.window, self.cores[i], (self.quadrados[i][0], self.quadrados[i][1], self.quadrados[i][2], self.quadrados[i][3]))
-
+            else:
+                if self.quadrados[i][4] == AZUL_ESCURO:
+                    self.som0.play()
+                elif self.quadrados[i][4] == AMARELO_ESCURO:
+                    self.som1.play()
+                elif self.quadrados[i][4] == VERDE_ESCURO:
+                    self.som2.play()
+                elif self.quadrados[i][4] == VERMELHO_ESCURO:
+                    self.som3.play()
+    
     def update(self):
         self.tempo()
         if self.sorteia:
@@ -133,7 +142,7 @@ class TelaClassico(Jogo):
             if evento.type == pygame.QUIT:
                 pygame.quit()
                 quit()
-            if evento.type == pygame.MOUSEBUTTONDOWN and evento.button == 1:
+            if evento.type == pygame.MOUSEBUTTONDOWN :
                 x, y = pygame.mouse.get_pos()
                 mouse_rect = pygame.Rect(x, y, 1, 1)
                 
@@ -163,13 +172,13 @@ class TelaClassico(Jogo):
                         return TelaGameOverClassico()
                     
                 if self.sequencia_jogador == self.cores_sorteadas:
-                    self.sorteia = True
                     self.score += 1
                     self.indice_quadrado = 0
+                    self.sorteia = True
 
             if len(self.sequencia_jogador) == len(self.cores_sorteadas):
                 self.sequencia_jogador = []
-            
+
         return self 
     
     def tempo(self):  
@@ -179,7 +188,8 @@ class TelaClassico(Jogo):
             self.tempo_start = pygame.time.get_ticks()
             if self.mostra_quadrado:
                 self.indice_quadrado += 1
-  
+        
+
 class TelaRapido(Jogo):
     def __init__(self):
         super().__init__()
@@ -252,6 +262,15 @@ class TelaRapido(Jogo):
     
             if self.mostra_quadrado or self.indice_quadrado >= len(self.cores_sorteadas) or self.cores[i] != self.cores_sorteadas[self.indice_quadrado]:
                 pygame.draw.rect(self.window, self.cores[i], (self.quadrados[i][0], self.quadrados[i][1], self.quadrados[i][2], self.quadrados[i][3]))
+            else:
+                if self.quadrados[i][4] == AZUL_ESCURO:
+                    self.som0.play()
+                elif self.quadrados[i][4] == AMARELO_ESCURO:
+                    self.som1.play()
+                elif self.quadrados[i][4] == VERDE_ESCURO:
+                    self.som2.play()
+                elif self.quadrados[i][4] == VERMELHO_ESCURO:
+                    self.som3.play()
 
     def update(self):
         self.tempo()
@@ -383,6 +402,15 @@ class TelaEscuro(Jogo):
     
             if self.mostra_quadrado or self.indice_quadrado >= len(self.cores_sorteadas) or self.cores[i] != self.cores_sorteadas[self.indice_quadrado]:
                 pygame.draw.rect(self.window, self.cores[i], (self.quadrados[i][0], self.quadrados[i][1], self.quadrados[i][2], self.quadrados[i][3]))
+            else:
+                if self.quadrados[i][4] == CINZA1:
+                    self.som0.play()
+                elif self.quadrados[i][4] == CINZA2:
+                    self.som1.play()
+                elif self.quadrados[i][4] == CINZA3:
+                    self.som2.play()
+                elif self.quadrados[i][4] == CINZA4:
+                    self.som3.play()
 
     def update(self):
         self.tempo()
