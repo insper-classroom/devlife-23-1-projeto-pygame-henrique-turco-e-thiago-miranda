@@ -175,6 +175,7 @@ class TelaClassico(Jogo):
                     self.score += 1
                     self.indice_quadrado = 0
                     self.sorteia = True
+                    self.sleep_sem_pausa(2)
 
             if len(self.sequencia_jogador) == len(self.cores_sorteadas):
                 self.sequencia_jogador = []
@@ -188,7 +189,18 @@ class TelaClassico(Jogo):
             self.tempo_start = pygame.time.get_ticks()
             if self.mostra_quadrado:
                 self.indice_quadrado += 1
-        
+    
+    def sleep_sem_pausa(self, seconds):
+        pygame.time.set_timer(pygame.USEREVENT, seconds * 1000)
+        while True:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    return
+
+                if event.type == pygame.USEREVENT:
+                    pygame.time.set_timer(pygame.USEREVENT, 0)
+                    return
 
 class TelaRapido(Jogo):
     def __init__(self):
