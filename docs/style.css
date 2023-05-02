@@ -23,7 +23,7 @@ nav{
 }
 
 nav img{
-    width: 150px;
+    width: 220px;
 }
 
 .nav-links{
@@ -49,7 +49,7 @@ nav img{
     content: '';
     width: 0%;
     height: 2px;
-    background: blue;
+    background: rgb(255, 41, 21);
     display: block;
     margin: auto;
     transition: 0.5s;
@@ -88,12 +88,13 @@ nav img{
     font-size: 16px;
     background: transparent;
     cursor: pointer;
+    
 }
 
 .hero-btn:hover{
-    border: 1px solid blue;
-    background: blue;
-    transition: 1s;
+    border: 1px solid rgb(255, 41, 21);
+    background: rgb(225, 41, 21);
+    transition: 0.7s;
 }
 
 nav.fa{
@@ -101,20 +102,29 @@ nav.fa{
 }
 
 #desc{
-    width: 80%;
+    width: 100%;
     margin: auto;
     text-align: center;
     padding-top: 100px;
+    background-color: #1f1f1f;
 }
 
 h1{
     font-size: 40px;
     font-weight: 600;
+    color: #ffffff;
+}
+
+h3{
+    font-size: 35px;
+    font-weight: 600;
+    color: #ffffff;
+
 }
 
 p{
-    color: #353535;
-    font-size: 17px;
+    color: #ffffff;
+    font-size: 22px;
     font-weight: 400;
     line-height: 22px;
     margin-top: 12px;
@@ -127,7 +137,8 @@ p{
     margin-top: 7%;
     display: flex;
     justify-content: center;
-    
+    width: 100%;
+    background-color: #1f1f1f;
 }
 
 .modos > * {
@@ -139,25 +150,18 @@ p{
     padding-bottom: 56.25%;
     padding-top: 35px;
     height: 0;
+    ;
   }
 
 /*-----Log-----*/
 
 #log{
-    width: 80%;
+    width: 100%;
     margin: auto;
     text-align: center;
     padding-top: 50px;
-}
-
-
-/*-----Download-----*/
-
-#download{
-    width: 80%;
-    margin: auto;
-    text-align: center;
-    padding-top: 50px;
+    background-color: #1f1f1f;
+    
 }
 
 /*-----Equipe-----*/
@@ -166,10 +170,96 @@ p{
     width: 100%;
     text-align: center;
     padding: 30px 0;
+    padding-top: 10%;
+    background-color: #1f1f1f;
+    
+}
+.integrantes{
+    margin-top: 2%;
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    background-color: #1f1f1f;
+}
+.integrantes > * {
+    margin: 0 20px; /* Adiciona um espaçamento entre cada integrante */
+}
+.integrantes button{
+    width: 200px;
+    height: 50px;
+    border-radius: 5px;
+    border: solid 2px #3b3a3a;
+    background: transparent;
+    color: #ffffff;
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin-top: 20px;
+    cursor: pointer;
 }
 
+.integrantes button:hover{
+    background: rgb(202, 31, 16);
+    color: #fff;
+    transition: 0.7s;
+}
 .equipe h4{
     margin-bottom: 25px;
     margin-top: 20px;
+
     font-weight: 600;
+}
+
+/*-----Download-----*/
+#download{
+    width: 100%;
+    margin: auto;
+    text-align: center;
+    padding-top: 50px;
+    padding-bottom: 50px;
+    background-color: #1f1f1f;
+}
+#download button{
+    width: 200px;
+    height: 50px;
+    border-radius: 5px;
+    border: none;
+    background: rgb(255, 41, 21);
+    color: #ffffff;
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin-top: 20px;
+    cursor: pointer;
+}
+#download button:hover{
+    background: rgb(167, 25, 12);
+    color: #fff;
+    transition: 0.7s;
+}
+.rect_amarelo{
+    border: solid 5px rgba(255, 255, 0, 0.725);
+    background-color: rgba(255, 255, 0, 0.085);
+    padding: 10px;
+}
+
+.rect_azul{
+    border: solid 5px rgba(0, 149, 255, 0.725); 
+    background-color: rgba(0, 145, 255, 0.07); 
+    padding: 10px;
+}
+
+.rect_verde{
+    border: solid 5px rgba(0, 255, 0, 0.725); 
+    background-color: rgba(0, 255, 0, 0.07); 
+    padding: 10px;
+}
+
+.rect_preto{
+    border: solid 5px #0000009c; 
+    background-color: #2a2929; 
+    padding: 10px;
+}
+
+.rect_preto img{
+    width: 200px;
+    height: 200px;
 }
