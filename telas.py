@@ -133,7 +133,7 @@ class TelaClassico(Jogo):
                     self.som3.play()
     
     def update(self):
-        self.tempo()
+        self.tempo_entre_pisques()
         if self.sorteia:
             self.sorteia_quadrados()
             self.sorteia = False
@@ -175,14 +175,14 @@ class TelaClassico(Jogo):
                     self.score += 1
                     self.indice_quadrado = 0
                     self.sorteia = True
-                    self.sleep_sem_pausa(2)
+                    self.pausa_entre_rodadas(2)
 
             if len(self.sequencia_jogador) == len(self.cores_sorteadas):
                 self.sequencia_jogador = []
 
         return self 
     
-    def tempo(self):  
+    def tempo_entre_pisques(self):  
         self.tempo_passado = pygame.time.get_ticks() - self.tempo_start
         if self.tempo_passado > 650:
             self.mostra_quadrado = not self.mostra_quadrado
@@ -190,7 +190,8 @@ class TelaClassico(Jogo):
             if self.mostra_quadrado:
                 self.indice_quadrado += 1
     
-    def sleep_sem_pausa(self, seconds):
+    #Função que pausa o jogo entre as rodadas (solução criada com ajuda do ChatGPT)
+    def pausa_entre_rodadas(self, seconds):
         pygame.time.set_timer(pygame.USEREVENT, seconds * 1000)
         while True:
             for event in pygame.event.get():
@@ -327,6 +328,7 @@ class TelaRapido(Jogo):
                     self.sorteia = True
                     self.score += 1
                     self.indice_quadrado = 0
+                    self.pausa_entre_rodadas(1)
 
             if len(self.sequencia_jogador) == len(self.cores_sorteadas):
                 self.sequencia_jogador = []
@@ -340,7 +342,19 @@ class TelaRapido(Jogo):
             self.tempo_start = pygame.time.get_ticks()
             if self.mostra_quadrado:
                 self.indice_quadrado += 1
-# Tempo rápido não está funcionando, a sequencia é mostrada na mesma velocidade que no modo classico    
+    
+    def pausa_entre_rodadas(self, seconds):
+        pygame.time.set_timer(pygame.USEREVENT, seconds * 1000)
+        while True:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    return
+
+                if event.type == pygame.USEREVENT:
+                    pygame.time.set_timer(pygame.USEREVENT, 0)
+                    return
+   
 
 class TelaEscuro(Jogo):
     def __init__(self):
@@ -418,11 +432,11 @@ class TelaEscuro(Jogo):
                 if self.quadrados[i][4] == CINZA1:
                     self.som0.play()
                 elif self.quadrados[i][4] == CINZA2:
-                    self.som1.play()
+                    self.som0.play()
                 elif self.quadrados[i][4] == CINZA3:
-                    self.som2.play()
+                    self.som0.play()
                 elif self.quadrados[i][4] == CINZA4:
-                    self.som3.play()
+                    self.som0.play()
 
     def update(self):
         self.tempo()
@@ -445,15 +459,15 @@ class TelaEscuro(Jogo):
                 elif mouse_rect.colliderect(self.retangulos[1]):
                     self.sequencia_jogador.append(self.cores[1])
                     self.verificação_individual += 1
-                    self.som1.play()
+                    self.som0.play()
                 elif mouse_rect.colliderect(self.retangulos[2]):
                     self.sequencia_jogador.append(self.cores[2])
                     self.verificação_individual += 1
-                    self.som2.play()
+                    self.som0.play()
                 elif mouse_rect.colliderect(self.retangulos[3]):
                     self.sequencia_jogador.append(self.cores[3])
                     self.verificação_individual += 1
-                    self.som3.play()
+                    self.som0.play()
                 
                 for i in range(len(self.sequencia_jogador)):
                     if self.sequencia_jogador[i] == self.cores_sorteadas[i]:
@@ -467,6 +481,7 @@ class TelaEscuro(Jogo):
                     self.sorteia = True
                     self.score += 1
                     self.indice_quadrado = 0
+                    self.pausa_entre_rodadas(2)
 
             if len(self.sequencia_jogador) == len(self.cores_sorteadas):
                 self.sequencia_jogador = []
@@ -480,6 +495,18 @@ class TelaEscuro(Jogo):
             self.tempo_start = pygame.time.get_ticks()
             if self.mostra_quadrado:
                 self.indice_quadrado += 1
+    
+    def pausa_entre_rodadas(self, seconds):
+        pygame.time.set_timer(pygame.USEREVENT, seconds * 1000)
+        while True:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    return
+
+                if event.type == pygame.USEREVENT:
+                    pygame.time.set_timer(pygame.USEREVENT, 0)
+                    return
 
 class TelaGameOverClassico(Jogo):
     def __init__(self):
