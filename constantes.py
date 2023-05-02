@@ -1,15 +1,15 @@
-# JOGO
-LARGURA = 800
-ALTURA = 600
-LARGURA_RECT = 180
-ALTURA_RECT = 180
+# Jogo
 TÍTULO = "Pattern Pursuit"
 GAME_OVER = "Game Over"
 MODO_CLASSICO = "Modo Clássico"
 MODO_RÁPIDO = "Modo Rápido"
 MODO_ESCURO = "Modo Escuro"
+LARGURA = 800
+ALTURA = 600
+LARGURA_RECT = 180
+ALTURA_RECT = 180
 
-# CORES
+# Cores
 BRANCO = (255, 255, 255)
 PRETO = (0, 0, 0)
 CINZA1 = (101, 100, 100)

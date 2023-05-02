@@ -2,32 +2,38 @@ import pygame
 import random
 from sprites import *
 from constantes import *
-import time
+
 
 class Jogo:
     def __init__(self):
         pygame.init()
         pygame.display.set_caption(TÍTULO)
         self.window = pygame.display.set_mode((LARGURA, ALTURA))
+        # Artes para fundo das telas
         self.fundo = pygame.image.load('assets/snd/img/img/Inicio-Pattern-Pursuit.png')
         self.fundo_modo_classico = pygame.image.load('assets/snd/img/img/Modo-Classico.png')
         self.fundo_modo_rapido = pygame.image.load('assets/snd/img/img/Modo-Rápido.png')
         self.fundo_modo_escuro = pygame.image.load('assets/snd/img/img/Modo-Escuro.png')
+        # Música de fundo
         pygame.mixer_music.load('assets/snd/img/Snd/390655__mvrasseli__atari-game-masters-loop.wav')
         pygame.mixer_music.play(loops=-1)
 
+    # Loop
     def roda(self):
         self.desenha()
         pygame.display.update()
 
+
 class TelaInicial(Jogo):
     def __init__(self):
         super().__init__()
+        # Botões dos modos e sair
         self.rect_modo_classico = pygame.Rect(235, 190, 330, 90)
         self.rect_modo_rapido = pygame.Rect(235, 290, 330, 90)
         self.rect_modo_escuro = pygame.Rect(235, 390, 330, 90)
         self.rect_sair = pygame.Rect(235, 490, 330, 90)
 
+    # Desenha a arte da tela inicial
     def desenha(self):
         self.window.blit(self.fundo, (0, 0))
         pygame.display.update()
@@ -37,6 +43,7 @@ class TelaInicial(Jogo):
             if evento.type == pygame.QUIT:
                 pygame.quit()
                 quit(0)
+            # Seleção de modos de jogo e sair
             if evento.type == pygame.MOUSEBUTTONDOWN and evento.button == 1:
                 x, y = pygame.mouse.get_pos()
                 mouse_rect = pygame.Rect(x, y, 1, 1)
@@ -51,6 +58,7 @@ class TelaInicial(Jogo):
                     quit()
         return self # Retorna a própria tela inicial
 
+
 class TelaClassico(Jogo):
     def __init__(self):
         super().__init__()
@@ -58,6 +66,7 @@ class TelaClassico(Jogo):
         self.cores_claras = [AZUL, AMARELO, VERDE, VERMELHO]
         self.cores = [AZUL_ESCURO, AMARELO_ESCURO, VERDE_ESCURO, VERMELHO_ESCURO]
 
+        # Quadrados escuros
         self.quadrados = [
             [210, 180, LARGURA_RECT, ALTURA_RECT, AZUL_ESCURO],
             [410, 180, LARGURA_RECT, ALTURA_RECT, AMARELO_ESCURO],
@@ -65,6 +74,7 @@ class TelaClassico(Jogo):
             [410, 380, LARGURA_RECT, ALTURA_RECT, VERMELHO_ESCURO]
         ]
 
+        # Quadrados mais claros para "piscar"
         self.quadrados_claros = [
             QuadradoClaro(210, 180, LARGURA_RECT, ALTURA_RECT, AZUL),
             QuadradoClaro(410, 180, LARGURA_RECT, ALTURA_RECT, AMARELO),
@@ -72,18 +82,22 @@ class TelaClassico(Jogo):
             QuadradoClaro(410, 380, LARGURA_RECT, ALTURA_RECT, VERMELHO) 
         ]
 
+        # Booleanos
         self.sorteia = True
         self.mostra_quadrado = True
+        self.validacao_jogada = False
+        #Listas
         self.cores_sorteadas = []
-        self.sequencia_jogador = []
         self.rect_sorteados = []
         self.retangulos = []
-        self.tempo_start = pygame.time.get_ticks()
+        self.sequencia_jogador = []
+        # Valores
         self.indice_quadrado = 0
         self.verificação_individual = 0
-        self.validacao_jogada = False
         self.score = 0
         self.highscore = self.get_high_score_classico()
+        self.tempo_start = pygame.time.get_ticks()
+        # Sons
         self.som0 = pygame.mixer.Sound('assets/snd/img/snd/00.wav')
         self.som1 = pygame.mixer.Sound('assets/snd/img/snd/01.wav')
         self.som2 = pygame.mixer.Sound('assets/snd/img/snd/02.wav')
@@ -91,11 +105,13 @@ class TelaClassico(Jogo):
         self.som_game_over = pygame.mixer.Sound('assets\snd\img\Snd\mixkit-funny-game-over-2878.wav')
         pygame.mixer.music.set_volume(0.2)
 
+    # Função para ler o High Score
     def get_high_score_classico(self):
         with open("high_score_classico.txt", "r") as file:
             score = file.read()
         return int(score)
 
+    # Função para salvar o High Score e se for o caso, substituir o antigo
     def save_score(self):
         with open("high_score_classico.txt", "w") as file:
             if self.score > self.highscore:
@@ -103,6 +119,7 @@ class TelaClassico(Jogo):
             else:
                 file.write(str(self.highscore))
 
+    # Função para sortear a sequência de cores
     def sorteia_quadrados(self):
         if self.sorteia:
             quadrado_sorteado = random.choice(self.quadrados) 
@@ -111,10 +128,12 @@ class TelaClassico(Jogo):
 
     def desenha(self):
         self.window.blit(self.fundo_modo_classico, (0, 0))
+        # Desenha Score e High Score
         Pontuacao(270, 150, f"Score: {str(self.score)}").desenha(self.window)
         Pontuacao(440, 150, f"High Score: {str(self.highscore)}").desenha(self.window)
 
-        for quadrado_claro in self.quadrados_claros: # Desenha os quadrados claros
+        # Desenha os quadrados claros (atrás dos escuros)
+        for quadrado_claro in self.quadrados_claros:
             quadrado_claro.desenha(self.window)
 
         for i in range(4): # Cria os retângulos para verificação do clique
@@ -145,7 +164,7 @@ class TelaClassico(Jogo):
             if evento.type == pygame.MOUSEBUTTONDOWN :
                 x, y = pygame.mouse.get_pos()
                 mouse_rect = pygame.Rect(x, y, 1, 1)
-                
+                # Cria a sequência do jogador 
                 if mouse_rect.colliderect(self.retangulos[0]):
                     self.som0.play()
                     self.sequencia_jogador.append(self.cores[0])
@@ -162,35 +181,33 @@ class TelaClassico(Jogo):
                     self.som3.play()
                     self.sequencia_jogador.append(self.cores[3])
                     self.verificação_individual += 1
-                
+                # Verifica se o jogador acertou a sequência
                 for i in range(len(self.sequencia_jogador)):
                     if self.sequencia_jogador[i] == self.cores_sorteadas[i]:
                         self.validacao_jogada = True
-                    else: # Caso o jogador erre a sequência
+                    else: # Caso o jogador erre a sequência, tela Game Over é chamada
                         self.save_score()
                         self.som_game_over.play()
-                        return TelaGameOverClassico()
-                    
-                if self.sequencia_jogador == self.cores_sorteadas:
+                        return TelaGameOverClassico()   
+                if self.sequencia_jogador == self.cores_sorteadas: # Jogador acertou a sequência
                     self.score += 1
                     self.indice_quadrado = 0
                     self.sorteia = True
                     self.pausa_entre_rodadas(2)
-
-            if len(self.sequencia_jogador) == len(self.cores_sorteadas):
+            if len(self.sequencia_jogador) == len(self.cores_sorteadas): # Quando acaba a rodada a sequência do jogador é reinicializada
                 self.sequencia_jogador = []
-
         return self 
     
+    # Função que controla o tempo de exibição dos quadrados
     def tempo_entre_pisques(self):  
         self.tempo_passado = pygame.time.get_ticks() - self.tempo_start
-        if self.tempo_passado > 650:
+        if self.tempo_passado > 700:
             self.mostra_quadrado = not self.mostra_quadrado
             self.tempo_start = pygame.time.get_ticks()
             if self.mostra_quadrado:
                 self.indice_quadrado += 1
     
-    #Função que pausa o jogo entre as rodadas (solução criada com ajuda do ChatGPT)
+    # Função que pausa o jogo entre as rodadas (solução criada com ajuda do ChatGPT)
     def pausa_entre_rodadas(self, seconds):
         pygame.time.set_timer(pygame.USEREVENT, seconds * 1000)
         while True:
@@ -198,10 +215,10 @@ class TelaClassico(Jogo):
                 if event.type == pygame.QUIT:
                     pygame.quit()
                     return
-
                 if event.type == pygame.USEREVENT:
                     pygame.time.set_timer(pygame.USEREVENT, 0)
                     return
+
 
 class TelaRapido(Jogo):
     def __init__(self):
@@ -210,6 +227,7 @@ class TelaRapido(Jogo):
         self.cores_claras = [AZUL, AMARELO, VERDE, VERMELHO]
         self.cores = [AZUL_ESCURO, AMARELO_ESCURO, VERDE_ESCURO, VERMELHO_ESCURO]
 
+        # Quadrados escuros
         self.quadrados = [
             [210, 180, LARGURA_RECT, ALTURA_RECT, AZUL_ESCURO],
             [410, 180, LARGURA_RECT, ALTURA_RECT, AMARELO_ESCURO],
@@ -217,6 +235,7 @@ class TelaRapido(Jogo):
             [410, 380, LARGURA_RECT, ALTURA_RECT, VERMELHO_ESCURO]
         ]
 
+        # Quadrados mais claros para "piscar"
         self.quadrados_claros = [
             QuadradoClaro(210, 180, LARGURA_RECT, ALTURA_RECT, AZUL),
             QuadradoClaro(410, 180, LARGURA_RECT, ALTURA_RECT, AMARELO),
@@ -224,18 +243,22 @@ class TelaRapido(Jogo):
             QuadradoClaro(410, 380, LARGURA_RECT, ALTURA_RECT, VERMELHO) 
         ]
 
+        # Booleanos
         self.sorteia = True
         self.mostra_quadrado = True
+        self.validacao_jogada = False
+        # Listas
         self.cores_sorteadas = []
-        self.sequencia_jogador = []
         self.rect_sorteados = []
         self.retangulos = []
-        self.tempo_start = pygame.time.get_ticks()
+        self.sequencia_jogador = []
+        # Valores
         self.indice_quadrado = 0
         self.verificação_individual = 0
-        self.validacao_jogada = False
         self.score = 0
         self.highscore = self.get_high_score_rapido()
+        self.tempo_start = pygame.time.get_ticks()
+        # Sons
         self.som0 = pygame.mixer.Sound('assets/snd/img/snd/00.wav')
         self.som1 = pygame.mixer.Sound('assets/snd/img/snd/01.wav')
         self.som2 = pygame.mixer.Sound('assets/snd/img/snd/02.wav')
@@ -243,11 +266,13 @@ class TelaRapido(Jogo):
         self.som_game_over = pygame.mixer.Sound('assets\snd\img\Snd\mixkit-funny-game-over-2878.wav')
         pygame.mixer.music.set_volume(0.2)
 
+    # Função para ler High Score
     def get_high_score_rapido(self):
         with open("high_score_rapido.txt", "r") as file:
             score = file.read()
         return int(score)
 
+    # Função para salvar o High Score e se for o caso, substituir o antigo
     def save_score(self):
         with open("high_score_rapido.txt", "w") as file:
             if self.score > self.highscore:
@@ -255,6 +280,7 @@ class TelaRapido(Jogo):
             else:
                 file.write(str(self.highscore))
 
+    # Função para sortear a sequência de cores
     def sorteia_quadrados(self):
         if self.sorteia:
             quadrado_sorteado = random.choice(self.quadrados) 
@@ -263,16 +289,17 @@ class TelaRapido(Jogo):
 
     def desenha(self):
         self.window.blit(self.fundo_modo_rapido, (0, 0))
+        # Desenha Score e High Score 
         Pontuacao(270, 150, f"Score: {str(self.score)}").desenha(self.window)
         Pontuacao(440, 150, f"High Score: {str(self.highscore)}").desenha(self.window)
 
-        for quadrado_claro in self.quadrados_claros: # Desenha os quadrados claros
+        # Desenha os quadrados claros (atrás dos escuros)
+        for quadrado_claro in self.quadrados_claros:
             quadrado_claro.desenha(self.window)
 
         for i in range(4): # Cria os retângulos para verificação do clique
             r = pygame.Rect(self.quadrados[i][0], self.quadrados[i][1], self.quadrados[i][2], self.quadrados[i][3])
             self.retangulos.append(r) 
-    
             if self.mostra_quadrado or self.indice_quadrado >= len(self.cores_sorteadas) or self.cores[i] != self.cores_sorteadas[self.indice_quadrado]:
                 pygame.draw.rect(self.window, self.cores[i], (self.quadrados[i][0], self.quadrados[i][1], self.quadrados[i][2], self.quadrados[i][3]))
             else:
@@ -286,7 +313,7 @@ class TelaRapido(Jogo):
                     self.som3.play()
 
     def update(self):
-        self.tempo()
+        self.tempo_entre_pisques()
         if self.sorteia:
             self.sorteia_quadrados()
             self.sorteia = False
@@ -298,7 +325,7 @@ class TelaRapido(Jogo):
             if evento.type == pygame.MOUSEBUTTONDOWN and evento.button == 1:
                 x, y = pygame.mouse.get_pos()
                 mouse_rect = pygame.Rect(x, y, 1, 1)
-                
+                # Cria a sequência do jogador 
                 if mouse_rect.colliderect(self.retangulos[0]):
                     self.sequencia_jogador.append(self.cores[0])
                     self.verificação_individual += 1
@@ -315,34 +342,33 @@ class TelaRapido(Jogo):
                     self.sequencia_jogador.append(self.cores[3])
                     self.verificação_individual += 1
                     self.som3.play()
-                
+                # Verifica se o jogador acertou a sequência
                 for i in range(len(self.sequencia_jogador)):
                     if self.sequencia_jogador[i] == self.cores_sorteadas[i]:
                         self.validacao_jogada = True
-                    else: # Caso o jogador erre a sequência
+                    else: # Caso o jogador erre a sequência, tela Game Over é chamada
                         self.save_score()
                         self.som_game_over.play()
                         return TelaGameOverRapido()
-                    
-                if self.sequencia_jogador == self.cores_sorteadas:
+                if self.sequencia_jogador == self.cores_sorteadas: # Jogador acertou a sequência
                     self.sorteia = True
                     self.score += 1
                     self.indice_quadrado = 0
                     self.pausa_entre_rodadas(1)
-
-            if len(self.sequencia_jogador) == len(self.cores_sorteadas):
-                self.sequencia_jogador = []
-            
+            if len(self.sequencia_jogador) == len(self.cores_sorteadas): # Quando acaba a rodada a sequência do jogador é reinicializada
+                self.sequencia_jogador = []   
         return self 
     
-    def tempo(self):  
+    # Função que controla o tempo de exibição dos quadrados
+    def tempo_entre_pisques(self):  
         self.tempo_passado = pygame.time.get_ticks() - self.tempo_start
-        if self.tempo_passado > 320:
+        if self.tempo_passado > 300:
             self.mostra_quadrado = not self.mostra_quadrado
             self.tempo_start = pygame.time.get_ticks()
             if self.mostra_quadrado:
                 self.indice_quadrado += 1
     
+    # Função que pausa o jogo entre as rodadas (solução criada com ajuda do ChatGPT)
     def pausa_entre_rodadas(self, seconds):
         pygame.time.set_timer(pygame.USEREVENT, seconds * 1000)
         while True:
@@ -350,7 +376,6 @@ class TelaRapido(Jogo):
                 if event.type == pygame.QUIT:
                     pygame.quit()
                     return
-
                 if event.type == pygame.USEREVENT:
                     pygame.time.set_timer(pygame.USEREVENT, 0)
                     return
@@ -363,6 +388,7 @@ class TelaEscuro(Jogo):
         self.cores_claras = [AZUL, AMARELO, VERDE, VERMELHO]
         self.cores = [CINZA1, CINZA2, CINZA3, CINZA4]
 
+        # Quadrados escuros
         self.quadrados = [
             [210, 180, LARGURA_RECT, ALTURA_RECT, CINZA1],
             [410, 180, LARGURA_RECT, ALTURA_RECT, CINZA2],
@@ -370,6 +396,7 @@ class TelaEscuro(Jogo):
             [410, 380, LARGURA_RECT, ALTURA_RECT, CINZA4]
         ]
 
+        # Quadrados mais claros para "piscar"
         self.quadrados_claros = [
             QuadradoClaro(210, 180, LARGURA_RECT, ALTURA_RECT, AZUL),
             QuadradoClaro(410, 180, LARGURA_RECT, ALTURA_RECT, AMARELO),
@@ -377,18 +404,22 @@ class TelaEscuro(Jogo):
             QuadradoClaro(410, 380, LARGURA_RECT, ALTURA_RECT, VERMELHO) 
         ]
 
+        # Booleanos
         self.sorteia = True
         self.mostra_quadrado = True
+        self.validacao_jogada = False
+        # Listas
         self.cores_sorteadas = []
-        self.sequencia_jogador = []
         self.rect_sorteados = []
         self.retangulos = []
-        self.tempo_start = pygame.time.get_ticks()
+        self.sequencia_jogador = []
+        # Valores
         self.indice_quadrado = 0
         self.verificação_individual = 0
-        self.validacao_jogada = False
         self.score = 0
         self.highscore = self.get_high_score_escuro()
+        self.tempo_start = pygame.time.get_ticks()
+        # Sons
         self.som0 = pygame.mixer.Sound('assets/snd/img/snd/00.wav')
         self.som1 = pygame.mixer.Sound('assets/snd/img/snd/01.wav')
         self.som2 = pygame.mixer.Sound('assets/snd/img/snd/02.wav')
@@ -396,11 +427,13 @@ class TelaEscuro(Jogo):
         self.som_game_over = pygame.mixer.Sound('assets\snd\img\Snd\mixkit-funny-game-over-2878.wav')
         pygame.mixer.music.set_volume(0.2)
 
+    # Função para ler o High Score
     def get_high_score_escuro(self):
         with open("high_score_escuro.txt", "r") as file:
             score = file.read()
         return int(score)
 
+    # Função para salvar o High Score e se for o caso, substituir o antigo
     def save_score(self):
         with open("high_score_escuro.txt", "w") as file:
             if self.score > self.highscore:
@@ -408,6 +441,7 @@ class TelaEscuro(Jogo):
             else:
                 file.write(str(self.highscore))
 
+    # Função para sortear a sequência de cores
     def sorteia_quadrados(self):
         if self.sorteia:
             quadrado_sorteado = random.choice(self.quadrados) 
@@ -416,10 +450,12 @@ class TelaEscuro(Jogo):
 
     def desenha(self):
         self.window.blit(self.fundo_modo_escuro, (0, 0))
+        # Desenha Score e High Score
         Pontuacao(270, 150, f"Score: {str(self.score)}").desenha(self.window)
         Pontuacao(440, 150, f"High Score: {str(self.highscore)}").desenha(self.window)
 
-        for quadrado_claro in self.quadrados_claros: # Desenha os quadrados claros
+        # Desenha os quadrados claros (atrás dos escuros)
+        for quadrado_claro in self.quadrados_claros:
             quadrado_claro.desenha(self.window)
 
         for i in range(4): # Cria os retângulos para verificação do clique
@@ -439,7 +475,7 @@ class TelaEscuro(Jogo):
                     self.som0.play()
 
     def update(self):
-        self.tempo()
+        self.tempo_entre_pisques()
         if self.sorteia:
             self.sorteia_quadrados()
             self.sorteia = False
@@ -451,7 +487,7 @@ class TelaEscuro(Jogo):
             if evento.type == pygame.MOUSEBUTTONDOWN and evento.button == 1:
                 x, y = pygame.mouse.get_pos()
                 mouse_rect = pygame.Rect(x, y, 1, 1)
-                
+                # Cria a sequência do jogador 
                 if mouse_rect.colliderect(self.retangulos[0]):
                     self.sequencia_jogador.append(self.cores[0])
                     self.verificação_individual += 1
@@ -468,34 +504,33 @@ class TelaEscuro(Jogo):
                     self.sequencia_jogador.append(self.cores[3])
                     self.verificação_individual += 1
                     self.som0.play()
-                
+                # Verifica se o jogador acertou a sequência
                 for i in range(len(self.sequencia_jogador)):
                     if self.sequencia_jogador[i] == self.cores_sorteadas[i]:
                         self.validacao_jogada = True
-                    else: # Caso o jogador erre a sequência
+                    else: # Caso o jogador erre a sequência, tela Game Over é chamada
                         self.save_score()
                         self.som_game_over.play()
                         return TelaGameOverEscuro()
-                    
-                if self.sequencia_jogador == self.cores_sorteadas:
+                if self.sequencia_jogador == self.cores_sorteadas: # Jogador acertou a sequência
                     self.sorteia = True
                     self.score += 1
                     self.indice_quadrado = 0
                     self.pausa_entre_rodadas(2)
-
-            if len(self.sequencia_jogador) == len(self.cores_sorteadas):
+            if len(self.sequencia_jogador) == len(self.cores_sorteadas): # Quando acaba a rodada a sequência do jogador é reinicializada
                 self.sequencia_jogador = []
-            
         return self 
     
-    def tempo(self):  
+    # Função que controla o tempo de exibição dos quadrados
+    def tempo_entre_pisques(self):  
         self.tempo_passado = pygame.time.get_ticks() - self.tempo_start
-        if self.tempo_passado > 650:
+        if self.tempo_passado > 700:
             self.mostra_quadrado = not self.mostra_quadrado
             self.tempo_start = pygame.time.get_ticks()
             if self.mostra_quadrado:
                 self.indice_quadrado += 1
     
+    # Função que pausa o jogo entre as rodadas (solução criada com ajuda do ChatGPT)
     def pausa_entre_rodadas(self, seconds):
         pygame.time.set_timer(pygame.USEREVENT, seconds * 1000)
         while True:
@@ -503,10 +538,10 @@ class TelaEscuro(Jogo):
                 if event.type == pygame.QUIT:
                     pygame.quit()
                     return
-
                 if event.type == pygame.USEREVENT:
                     pygame.time.set_timer(pygame.USEREVENT, 0)
                     return
+
 
 class TelaGameOverClassico(Jogo):
     def __init__(self):
@@ -526,10 +561,11 @@ class TelaGameOverClassico(Jogo):
             if evento.type == pygame.QUIT:
                 pygame.quit()
                 quit()
+            # Seleção dos botões
             if evento.type == pygame.MOUSEBUTTONDOWN and evento.button == 1:
                 x, y = pygame.mouse.get_pos()
                 mouse_rect = pygame.Rect(x, y, 1, 1)
-                if mouse_rect.colliderect(self.rect_tentar_de_novo):
+                if mouse_rect.colliderect(self.rect_tentar_de_novo): # Tentar de novo volta para o Modo Clássico
                     return TelaClassico()                    
                 elif mouse_rect.colliderect(self.rect_voltar_inicio):
                     return TelaInicial()
@@ -538,6 +574,7 @@ class TelaGameOverClassico(Jogo):
                     quit()
         return self
     
+
 class TelaGameOverRapido(Jogo):
     def __init__(self):
         super().__init__()
@@ -556,10 +593,11 @@ class TelaGameOverRapido(Jogo):
             if evento.type == pygame.QUIT:
                 pygame.quit()
                 quit()
+            # Seleção dos botões
             if evento.type == pygame.MOUSEBUTTONDOWN and evento.button == 1:
                 x, y = pygame.mouse.get_pos()
                 mouse_rect = pygame.Rect(x, y, 1, 1)
-                if mouse_rect.colliderect(self.rect_tentar_de_novo):
+                if mouse_rect.colliderect(self.rect_tentar_de_novo): # Tentar de novo volta para o Modo Rápido
                     return TelaRapido()                    
                 elif mouse_rect.colliderect(self.rect_voltar_inicio):
                     return TelaInicial()
@@ -567,7 +605,8 @@ class TelaGameOverRapido(Jogo):
                     pygame.quit()
                     quit()
         return self
-    
+
+
 class TelaGameOverEscuro(Jogo):
     def __init__(self):
         super().__init__()
@@ -586,10 +625,11 @@ class TelaGameOverEscuro(Jogo):
             if evento.type == pygame.QUIT:
                 pygame.quit()
                 quit()
+            # Seleção dos botões
             if evento.type == pygame.MOUSEBUTTONDOWN and evento.button == 1:
                 x, y = pygame.mouse.get_pos()
                 mouse_rect = pygame.Rect(x, y, 1, 1)
-                if mouse_rect.colliderect(self.rect_tentar_de_novo):
+                if mouse_rect.colliderect(self.rect_tentar_de_novo): # Tentar de novo volta para o Modo Escuro
                     return TelaEscuro()                    
                 elif mouse_rect.colliderect(self.rect_voltar_inicio):
                     return TelaInicial()

@@ -1,19 +1,6 @@
 import pygame
 from constantes import *
 
-# MUDEI DE CÍRCULO PARA QUADRADOS
-
-class Quadrado:
-    def __init__(self, x, y, largura_rect, altura_rect, cor):
-        self.x = x
-        self.y = y
-        self.largura_rect = largura_rect
-        self.altura_rect = altura_rect
-        self.cor = cor
-
-    def desenha(self, window):
-        pygame.draw.rect(window, self.cor, (self.x, self.y, self.largura_rect, self.altura_rect))
-    
 
 class QuadradoClaro:
     def __init__(self, x, y, largura_rect, altura_rect, cor):
